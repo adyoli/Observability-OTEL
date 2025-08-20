@@ -335,10 +335,10 @@ graph LR
 ```mermaid
 graph TD
     subgraph "API Endpoints"
-        E1[GET /health<br/>Health Check]
-        E2[POST /clients/{id}/documents<br/>Create Document]
-        E3[GET /clients/{id}/documents/{doc_id}<br/>Get Document]
-        E4[GET /clients/{id}/documents<br/>List Documents]
+        E1["GET /health<br/>Health Check"]
+        E2["POST /clients/{id}/documents<br/>Create Document"]
+        E3["GET /clients/{id}/documents/{doc_id}<br/>Get Document"]
+        E4["GET /clients/{id}/documents<br/>List Documents"]
     end
     
     subgraph "Health Check Response"
@@ -373,10 +373,20 @@ graph TD
     E4 --> DO3
     
     DO1 --> RS1
+    DO1 --> RS2
+    DO1 --> RS3
+    DO1 --> RS4
+
+    DO2 --> RS1
     DO2 --> RS2
-    DO3 --> RS3
-    DO4 --> RS4
+    DO2 --> RS3
+    DO2 --> RS4
     
+    DO3 --> RS1
+    DO3 --> RS2
+    DO3 --> RS3
+    DO3 --> RS4
+
     style E1 fill:#ff6b6b
     style DO1 fill:#4ecdc4
     style RS1 fill:#45b7d1
