@@ -182,9 +182,9 @@ graph LR
 ```mermaid
 graph TD
     subgraph "API Endpoints"
-        E1[GET /health<br/>Health Check]
-        E2[PUT /clients/{id}/upload-document<br/>Document Upload]
-        E3[GET /clients/{id}/documents/{doc_id}<br/>Document Retrieval]
+        E1["GET /health<br/>Health Check"]
+        E2["PUT /clients/{id}/upload-document<br/>Document Upload"]
+        E3["GET /clients/{id}/documents/{doc_id}<br/>Document Retrieval"]
     end
     
     subgraph "Health Check Response"
@@ -207,19 +207,9 @@ graph TD
         R4[processing status]
     end
     
-    E1 --> H1
-    E1 --> H2
-    E1 --> H3
-    
-    E2 --> U1
-    E2 --> U2
-    E2 --> U3
-    E2 --> U4
-    
-    E3 --> R1
-    E3 --> R2
-    E3 --> R3
-    E3 --> R4
+    E1 --> H1 & H2 & H3
+    E2 --> U1 & U2 & U3 & U4
+    E3 --> R1 & R2 & R3 & R4
     
     style E1 fill:#ff6b6b
     style E2 fill:#4ecdc4
