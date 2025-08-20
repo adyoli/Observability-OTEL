@@ -265,7 +265,7 @@ graph LR
 graph TD
     subgraph "Log Entry Structure"
         CID[correlation_id<br/>abc-123-def]
-        MSG[log_message<br/>"Document uploaded"]
+        MSG[log_message<br/>&quot;Document uploaded&quot;]
         SVC[service<br/>document-api]
         CTX[context_data<br/>client_id, file_size]
         TS[timestamp<br/>unix timestamp]
