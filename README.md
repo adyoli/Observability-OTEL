@@ -475,14 +475,14 @@ graph LR
 ```mermaid
 graph LR
     subgraph "Database Metrics"
-        QPS[Queries per Second<br/>rate(database_operations_total[5m])]
-        Q95[Query P95<br/>histogram_quantile(0.95, ...)]
+        QPS["Queries per Second<br/>rate(database_operations_total[5m])"]
+        Q95["Query P95<br/>histogram_quantile(0.95, ...)"]
         CONN[Connection Pool<br/>pool_usage, pool_health]
     end
     
     subgraph "Database Alerts"
-        A1[Slow Queries<br/>> 1s P95]
-        A2[High Error Rate<br/>> 5%]
+        A1["Slow Queries<br/>> 1s P95"]
+        A2["High Error Rate<br/>> 5%"]
         A3[Connection Issues<br/>pool_exhausted]
     end
     
