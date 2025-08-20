@@ -235,29 +235,34 @@ erDiagram
 ```mermaid
 graph TD
     subgraph "Core Tables"
-        T1[document_metadata<br/>Document Information]
-        T2[clients<br/>Client Management]
-        T3[users<br/>User Accounts]
+        T1["document_metadata<br/>Document Information"]
+        T2["clients<br/>Client Management"]
+        T3["users<br/>User Accounts"]
     end
     
     subgraph "document_metadata Fields"
-        F1[id: SERIAL PRIMARY KEY]
-        F2[client_id: VARCHAR(255)]
-        F3[filename: VARCHAR(500)]
-        F4[file_size: BIGINT]
-        F5[file_type: VARCHAR(100)]
-        F6[upload_timestamp: TIMESTAMP]
-        F7[file_path: VARCHAR(1000)]
-        F8[summary: TEXT]
-        F9[metadata: JSONB]
+        direction LR
+        subgraph "Fields 1-5"
+            F1["id: SERIAL PRIMARY KEY"]
+            F2["client_id: VARCHAR(255)"]
+            F3["filename: VARCHAR(500)"]
+            F4["file_size: BIGINT"]
+            F5["file_type: VARCHAR(100)"]
+        end
+        subgraph "Fields 6-9"
+            F6["upload_timestamp: TIMESTAMP"]
+            F7["file_path: VARCHAR(1000)"]
+            F8["summary: TEXT"]
+            F9["metadata: JSONB"]
+        end
     end
     
     subgraph "Indexes & Constraints"
-        I1[PRIMARY KEY: id]
-        I2[INDEX: client_id]
-        I3[INDEX: upload_timestamp]
-        I4[FOREIGN KEY: client_id -> clients.id]
-        I5[UNIQUE: client_id + filename]
+        I1["PRIMARY KEY: id"]
+        I2["INDEX: client_id"]
+        I3["INDEX: upload_timestamp"]
+        I4["FOREIGN KEY: client_id -> clients.id"]
+        I5["UNIQUE: client_id + filename"]
     end
     
     T1 --> F1
@@ -270,11 +275,11 @@ graph TD
     T1 --> F8
     T1 --> F9
     
-    F2 --> I1
-    F2 --> I2
-    F2 --> I3
-    F2 --> I4
-    F2 --> I5
+    T1 --> I1
+    T1 --> I2
+    T1 --> I3
+    T1 --> I4
+    T1 --> I5
     
     style T1 fill:#ff6b6b
     style F1 fill:#4ecdc4
