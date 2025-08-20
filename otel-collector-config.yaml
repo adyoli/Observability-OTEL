@@ -1,0 +1,159 @@
+# =============================================================================
+# OpenTelemetry Collector Configuration
+# =============================================================================
+# This configuration file defines how the OTEL collector processes, filters, and
+# exports telemetry data from all services in the system.
+#
+# Architecture:
+# 1. Receivers collect data from services via OTLP (gRPC/HTTP)
+# 2. Processors transform, filter, and enrich the data
+# 3. Exporters send data to destinations (debug console, monitoring systems)
+# 4. Pipelines connect receivers → processors → exporters
+#
+# Key Benefits:
+# - Centralized telemetry collection and processing
+# - Data filtering and enrichment
+# - Performance optimization through batching
+# - Resource management and memory limits
+# - Service attribution and correlation
+
+receivers:
+  # OTLP receiver accepts data from all services using OpenTelemetry protocol
+  otlp:
+    protocols:
+      # gRPC endpoint for high-performance data ingestion
+      # Used by Python services for efficient telemetry export
+      grpc:
+        endpoint: 0.0.0.0:4317
+      # HTTP endpoint for services that prefer HTTP transport
+      # Alternative to gRPC for compatibility
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  # Batch processor groups telemetry data for efficient export
+  # Reduces network overhead and improves collector performance
+  batch:
+    timeout: 1s                    # Maximum time to wait before exporting batch
+    send_batch_size: 1024          # Maximum number of items per batch
+  
+  # Memory limiter prevents collector from consuming excessive memory
+  # Critical for production environments with high telemetry volume
+  memory_limiter:
+    check_interval: 5s             # How often to check memory usage
+    limit_mib: 512                 # Maximum memory usage in MiB
+  
+  # Attributes processor enriches telemetry data with additional context
+  # Adds correlation IDs, service names, and operation details to all data
+  attributes:
+    actions:
+      # Ensure correlation_id is present in all telemetry data
+      # This enables request correlation across all services
+      - key: correlation_id
+        action: insert              # Insert if not present
+        from_attribute: correlation_id
+      
+      # Add service name for service attribution
+      # Helps identify which service generated what data
+      - key: service.name
+        action: insert              # Insert if not present
+        from_attribute: service.name
+      
+      # Add operation type for categorization
+      # Helps group similar operations for analysis
+      - key: operation
+        action: insert              # Insert if not present
+        from_attribute: operation
+      
+      # Add client ID for multi-tenant tracking
+      # Enables per-client performance and usage analysis
+      - key: client_id
+        action: insert              # Insert if not present
+        from_attribute: client_id
+  
+  # Resource processor adds environment and deployment information
+  # Provides context for all telemetry data
+  resource:
+    attributes:
+      # Add environment information for deployment tracking
+      # Helps distinguish between dev, staging, and production
+      - key: environment
+        value: "development"
+        action: upsert              # Update if present, insert if not
+
+  # Filter processor selectively includes telemetry data
+  # Reduces noise and focuses on relevant data for analysis
+  filter:
+    spans:
+      include:
+        # Only include spans from our application services
+        # Excludes system spans and other noise
+        services:
+          - "document-api"          # Document API service
+          - "data-store"            # Data store service
+        # Use strict matching for exact service name comparison
+        # Ensures only our services are included
+        match_type: "strict"
+
+exporters:
+  # Debug exporter outputs telemetry data to console/logs
+  # Perfect for development and debugging observability
+  debug:
+    verbosity: detailed             # Show all telemetry data details
+    sampling_initial: 1            # Sample first item in each batch
+    sampling_thereafter: 1         # Sample all subsequent items
+
+extensions:
+  # Health check extension provides collector health monitoring
+  # Enables monitoring systems to check collector status
+  health_check:
+    endpoint: 0.0.0.0:13133       # Health check endpoint
+
+service:
+  # Enable health check extension for monitoring
+  extensions: [health_check]
+  
+  # Define telemetry processing pipelines
+  # Each pipeline processes a specific signal type (traces, metrics, logs)
+  pipelines:
+    # Traces pipeline processes distributed tracing data
+    # Includes spans, trace context, and correlation information
+    traces:
+      receivers: [otlp]            # Accept traces via OTLP
+      processors: [
+        memory_limiter,            # Prevent memory issues
+        attributes,                # Enrich with correlation IDs and context
+        resource,                  # Add environment information
+        filter,                    # Filter to only our services
+        batch                      # Batch for efficient export
+      ]
+      exporters: [debug]           # Output to console for debugging
+    
+    # Metrics pipeline processes performance and operational metrics
+    # Includes counters, histograms, and gauges from all services
+    metrics:
+      receivers: [otlp]            # Accept metrics via OTLP
+      processors: [
+        memory_limiter,            # Prevent memory issues
+        attributes,                # Enrich with correlation IDs and context
+        resource,                  # Add environment information
+        batch                      # Batch for efficient export
+      ]
+      exporters: [debug]           # Output to console for debugging
+    
+    # Logs pipeline processes structured log data
+    # Includes application logs with correlation IDs and context
+    logs:
+      receivers: [otlp]            # Accept logs via OTLP
+      processors: [
+        memory_limiter,            # Prevent memory issues
+        attributes,                # Enrich with correlation IDs and context
+        resource,                  # Add environment information
+        batch                      # Batch for efficient export
+      ]
+      exporters: [debug]           # Output to console for debugging
+  
+  # Collector telemetry configuration
+  telemetry:
+    logs:
+      level: "info"                # Collector log level for debugging
