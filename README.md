@@ -455,15 +455,15 @@ python test_observability.py --health
 ```mermaid
 graph LR
     subgraph "Performance Metrics"
-        RPS[Requests per Second<br/>rate(http_requests_total[5m])]
-        P95[95th Percentile<br/>histogram_quantile(0.95, ...)]
-        ERR[Error Rate<br/>rate(http_errors_total[5m])]
+        RPS["Requests per Second<br/>rate(http_requests_total[5m])"]
+        P95["95th Percentile<br/>histogram_quantile(0.95, ...)"]
+        ERR["Error Rate<br/>rate(http_errors_total[5m])"]
     end
     
     subgraph "Alerting Thresholds"
-        T1[High Error Rate<br/>> 10%]
-        T2[Slow Response<br/>> 2s P95]
-        T3[Low Throughput<br/>< 100 RPS]
+        T1["High Error Rate<br/>> 10%"]
+        T2["Slow Response<br/>> 2s P95"]
+        T3["Low Throughput<br/>< 100 RPS"]
     end
     
     RPS --> T3
