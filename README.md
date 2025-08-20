@@ -578,9 +578,9 @@ graph TD
 ```mermaid
 graph TD
     subgraph "Data Store Endpoints"
-        H2[GET /health<br/>Database health with latency]
-        C1[POST /clients/{id}/documents<br/>Create document metadata]
-        G1[GET /clients/{id}/documents/{doc_id}<br/>Get document metadata]
+        H2["GET /health<br/>Database health with latency"]
+        C1["POST /clients/{id}/documents<br/>Create document metadata"]
+        G1["GET /clients/{id}/documents/{doc_id}<br/>Get document metadata"]
     end
     
     subgraph "Health Check Response"
