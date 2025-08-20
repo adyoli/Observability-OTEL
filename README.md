@@ -558,20 +558,20 @@ docker-compose logs otel-collector | grep "correlation_id"
 ```mermaid
 graph TD
     subgraph "Document API Endpoints"
-        H1[GET /health<br/>Health check with component status]
-        U1[PUT /clients/{id}/upload-document<br/>Document upload with tracing]
-        R1[GET /clients/{id}/documents/{doc_id}<br/>Document retrieval]
+        H1["GET /health<br/>Health check with component status"]
+        U1["PUT /clients/{id}/upload-document<br/>Document upload with tracing"]
+        R1["GET /clients/{id}/documents/{doc_id}<br/>Document retrieval"]
     end
     
     subgraph "Health Check Response"
-        R1[status: healthy/degraded/unhealthy]
-        R2[components: file_system, data_store]
-        R3[timestamp, version]
+        RESP1[status: healthy/degraded/unhealthy]
+        RESP2[components: file_system, data_store]
+        RESP3[timestamp, version]
     end
     
-    H1 --> R1
-    H1 --> R2
-    H1 --> R3
+    H1 --> RESP1
+    H1 --> RESP2
+    H1 --> RESP3
 ```
 
 #### **Data Store API (Port 8001)**
